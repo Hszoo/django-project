@@ -1,0 +1,18 @@
+{% extends 'base.html' %}
+
+{% block title %}post 상세 화면{% endblock %}
+<!-- post home을 구성하는 부분 -->
+{% block content %}
+<h1></h1>
+    <!-- 이 html 파일 렌더링 하면서 넘겨받은 
+        객체 id에 대해 detail 페이지 보여줌 -->
+    <h2>제목: {{post.title}} </h2>
+    <h4>작성일: {{post.create_at}} </h4>
+    <hr>
+    <p> {{post.content}} </p>
+
+    <!-- 수정 -->
+    <a href="{% url 'post_update' post.id %}">수정</a> 
+    <!-- 삭제 -->
+    <a href="{% url 'post_delete' post.id %}">삭제</a> 
+{% endblock %}

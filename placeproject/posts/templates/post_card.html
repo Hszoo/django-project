@@ -1,0 +1,24 @@
+<section class="py-5">
+    <div class="container px-4 px-lg-5 my-5">
+        <div class="row gx-4 gx-lg-5 align-items-center">
+            <div class="col-md-6"><img class="card-img-top mb-5 mb-md-0" src="{{post.image}}" alt="..." /></div>
+            <div class="col-md-6">
+                <div class="small mb-1">작성자:{{post.writer}}</div>
+                
+                <!-- 제목 -->
+                <h1 class="display-5 fw-bolder"><a href="{% url 'post_detail' post.id %}">{{post.title}}</a></h1>
+                <p class="lead">{{post.content}}</p>
+                
+                <div class="d-flex">
+                    <!-- 여기는 좋아요 개수 나오게 할거임;;;;;; -->
+                    <input class="form-control text-center me-3" id="inputQuantity" type="num" value="1" style="max-width: 3rem" />
+                    <!-- 저장 버튼 -->
+                    <button class="btn btn-outline-dark flex-shrink-0" type="button">
+                        <i class="bi-cart-fill me-1"></i>
+                        장소 스크랩
+                    </button>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
