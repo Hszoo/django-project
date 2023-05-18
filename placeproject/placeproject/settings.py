@@ -123,6 +123,11 @@ STATICFILES_DIRS = [
     BASE_DIR / 'static',
 ]
 
+# 이미지가 저장될 장소입니다
+MEDIA_URL = 'media/'
+MEDIA_ROOT = BASE_DIR / 'media' # BASE_DIR은 liongram으로 지정해뒀음 
+
+
 # Default primary key field type
 # https://docs.djangoproject.com/en/4.2/ref/settings/#default-auto-field
 

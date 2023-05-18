@@ -1,7 +1,7 @@
 from django import forms
-from .models import Post
+from .models import Comment
 
-class PostModelForm(forms.ModelForm) :
+class CommentModelForm(forms.ModelForm) :
     class Meta:
-            model = Post
+            model = Comment
             fields = '__all__' # 모델 post에 정의된 필드 all 입력받음

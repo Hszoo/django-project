@@ -1,17 +1,54 @@
 <section class="py-5">
     <div class="container px-4 px-lg-5 my-5">
         <div class="row gx-4 gx-lg-5 align-items-center">
-            <div class="col-md-6"><img class="card-img-top mb-5 mb-md-0" src="{{post.image}}" alt="..." /></div>
+            
+            <!-- 썸네일 표시 -->
             <div class="col-md-6">
+                <!-- 이미지 존재하지 않을 때 처리 -->
+                {% if post.image %} 
+                    <a href="{% url 'post_detail' post.id %}">
+                        <img class="card-img-top mb-5 mb-md-0" src="{{ post.image.url }}" alt="" />
+                    </a>
+
+                {% else %}
+                    <img class="card-img-top mb-5 mb-md-0" src = "http://via.placeholder.com/600x600" alt=""/>
+                {% endif %}
+            </div>
+            
+            <div class="col-md-6">
+                <!-- 작성자 표시 -->
                 <div class="small mb-1">작성자:{{post.writer}}</div>
                 
-                <!-- 제목 -->
+                <!-- 제목 표시 -->
                 <h1 class="display-5 fw-bolder"><a href="{% url 'post_detail' post.id %}">{{post.title}}</a></h1>
-                <p class="lead">{{post.content}}</p>
+                <p class="lead">
+                    {% if not detail %}
+                        {{ post.content|truncatechars:35 }}
+                    {% endif %}
+
+                </p>
                 
                 <div class="d-flex">
-                    <!-- 여기는 좋아요 개수 나오게 할거임;;;;;; -->
-                    <input class="form-control text-center me-3" id="inputQuantity" type="num" value="1" style="max-width: 3rem" />
+                    <!-- 추가예정 ) 여기는 좋아요 개수' -->
+                    <!-- class me-3이 칸 띄워준다 -->
+<!-- 
+                    <input class="form-control text-center me-3" id="inputQuantity" type="num" value="추천수:" style="max-width: 5rem">
+                    </input>
+--> 
+                    <!-- 따봉버튼 -->
+                    <button class="btn btn-outline-dark flex-shrink-0 me-3" type="button">
+                        <i class="">
+                            추천수:
+                        </i>
+                    </button>
+                    
+                    <!-- 댓글 작성 버튼 -->
+                    <button class="btn btn-outline-dark flex-shrink-0 me-3" type="button">
+                        <i class="">
+                            <a class="text-cente" href="{% url 'post_detail' post.id %}">댓글작성</a>
+                        </i>
+                    </button>
+                
                     <!-- 저장 버튼 -->
                     <button class="btn btn-outline-dark flex-shrink-0" type="button">
                         <i class="bi-cart-fill me-1"></i>
