@@ -10,7 +10,7 @@ For the full list of settings and their values, see
 https://docs.djangoproject.com/en/4.2/ref/settings/
 """
 
-from pathlib import Path
+from pathlib import Path, os
 
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve().parent.parent
@@ -123,11 +123,10 @@ STATICFILES_DIRS = [
     BASE_DIR / 'static',
 ]
 
-# 이미지가 저장될 장소입니다
-MEDIA_URL = 'media/'
-MEDIA_ROOT = BASE_DIR / 'media' # BASE_DIR은 liongram으로 지정해뒀음 
-
-
+# 이미지 파일 업로드 위해 
+MEDIA_ROOT = os.path.join(BASE_DIR, 'media')
+MEDIA_URL = '/media/'
+#
 # Default primary key field type
 # https://docs.djangoproject.com/en/4.2/ref/settings/#default-auto-field
 

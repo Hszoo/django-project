@@ -3,12 +3,16 @@
 {% block title %}post 작성{% endblock %}
 <!-- post home을 구성하는 부분 -->
 {% block content %}
-<h1>게시글 글 작성 페이지</h1>
-<form action="" method="POST">
-    {% csrf_token %}
-    <table>
-        {{ form.as_table }} 
-    </table>
-    <input type="submit" value="저장">
-</form>
+<h3>게시글 글 작성 페이지</h3>
+<div>
+    <form action="" method="POST">
+        {% csrf_token %}
+        
+        <table>
+            {{ form.as_table }} 
+        </table>
+        
+        <input type="submit" value="저장">
+    </form>
+</div>
 {% endblock %}
