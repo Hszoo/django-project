@@ -3,7 +3,7 @@ from django.conf import settings # settings 파일에 있는 값들을 가져올
 from django.conf.urls.static import static 
 from django.urls import path, include
 import home.views # 시작 앱 
-import posts.views # views에 정의된 create 함수 이용하기 위해 import 
+#import posts.views # views에 정의된 create 함수 이용하기 위해 import 
 
 urlpatterns = [
     path('admin/', admin.site.urls),

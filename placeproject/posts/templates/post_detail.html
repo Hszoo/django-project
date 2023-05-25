@@ -9,17 +9,38 @@
     <h5>제목: {{post.title}} </h4>
     <h5>작성일: {{post.create_at|date:"Y년 m월 d일"}} </h5>
     <hr>
-    {% if post.image %}    
-        <img src="{{ post.image.url }}" alt=""/>
-    {% else %}
     
-
-    <img src="http://via.placeholder.com/600x600" alt=""/>
+    <h4>게시글 사진</h4>
+    {% if post.photo %}    
+        <img src="{{ post.photo.url }}" alt="" height="300"/>
+    {% else %}
+        <img src="http://via.placeholder.com/600x600" alt=""/>
     {% endif %}
-    <p> {{ post.content }} </p>
 
-    <!-- 수정 -->
+    <!-- 내용 -->
+    <p> {{ post.content }} </p>
     <a href="{% url 'post_update' post.id %}">수정</a> 
-    <!-- 삭제 -->
     <a href="{% url 'post_delete' post.id %}">삭제</a> 
+    <hr>
+
+
+    <!-- 댓글 수정 -->
+    <!-- 템플릿 언어로, urls의 name 으로 이동 하도록 href 속성 값 지정 -->
+    <h4>댓글 목록</h4>
+    {% for comment in post.comment_set.all %}
+        <p>{{ comment }}</p>
+        <a href="{% url 'update_comment' post.id comment.id %}">댓글수정  </a>
+        <a href="{% url 'delete_comment' post.id comment.id %}">댓글삭제  </a>
+        <hr>    
+    {% endfor %}
+        
+    <!-- 댓글 작성 폼 -->
+    <!-- 특정 포스트 대상으로 댓글이 작성되어야 하므로  post.id 넘김 -->
+    
+    <form method="POST" action="{% url 'create_comment' post.id %}">
+        {% csrf_token %}
+        {{ comment_form }}
+        <input type="submit" value="댓글등록">
+    </form>
+    <hr>
 {% endblock %}
