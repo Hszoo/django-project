@@ -79,13 +79,12 @@
                                     <!-- 댓글 작성자 -->
                                     <div class="fw-bold">
                                         {{ comment.author }}
-
-                                        {% if request.user == comment.author %}
+                                    </div>
+                                    <p>{{ comment }}</p>
+                                    {% if request.user == comment.author %}
                                         <a href="{% url 'update_comment' post.id comment.id %}">댓글수정  </a>
                                         <a href="{% url 'delete_comment' post.id comment.id %}">댓글삭제  </a>
                                         {% endif %}  
-                                    </div>
-                                    <p>{{ comment }}</p>
                                 </div>                                
                             </div>  
                             {% endfor %}

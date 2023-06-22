@@ -8,13 +8,14 @@ from .models import Post, Comment  # Post 테이블
 
 # 홈이동
 def home(request) :
-    return render(request, 'post_index.html')
+    posts = Post.objects.all().order_by('-create_at') 
+    return render(request, 'post_index.html', {'posts':posts})
 
 # 작성된 post들 전부 표시 
 def post_list(request):  
     # 모든 객체들(all()) 을 . created_at(생성일 기준), - : 내림차순정렬
     posts = Post.objects.all().order_by('-create_at') 
-    paginator = Paginator(posts, 5) # 페이지당 게시글 5개씩 표시
+    paginator = Paginator(posts, 3) # 페이지당 게시글 5개씩 표시
     pagnum = request.GET.get('page') # 현재페이지
     posts = paginator.get_page(pagnum) #현재 페이지에 해당하는 게시글들
 
@@ -23,7 +24,7 @@ def post_list(request):
 
 def post_my(request) :
     posts = Post.objects.all().order_by('-create_at') 
-    paginator = Paginator(posts, 5) # 페이지당 게시글 5개씩 표시
+    paginator = Paginator(posts, 3) # 페이지당 게시글 5개씩 표시
     pagnum = request.GET.get('page') # 현재페이지
     posts = paginator.get_page(pagnum) #현재 페이지에 해당하는 게시글들
 
