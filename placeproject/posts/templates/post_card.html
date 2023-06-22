@@ -18,10 +18,10 @@
             
             <div class="col-md-6">
                 <!-- 작성자 표시 -->
-                <div class="small mb-1">작성자:{{post.writer}}</div>
+                <div class="small mb-1">작성자 {{post.author}}</div>
                 
                 <!-- 제목 표시 -->
-                <h1 class="display-5 fw-bolder"><a href="{% url 'post_detail' post.id %}">{{post.title}}</a></h1>
+                <h1 class="display-5 fw-bolder"><a class="nav-link" href="{% url 'post_detail' post.id %}">{{post.title}}</a></h1>
                 <p class="lead">
                     {% if not detail %}
                         {{ post.content|truncatechars:35 }}
@@ -39,14 +39,14 @@
                     <!-- 따봉버튼 -->
                     <button class="btn btn-outline-dark flex-shrink-0 me-3" type="button">
                         <i class="">
-                            추천수:
+                            추천수
                         </i>
                     </button>
                     
                     <!-- 댓글 작성 버튼 -->
                     <button class="btn btn-outline-dark flex-shrink-0 me-3" type="button">
                         <i class="">
-                            <a class="text-cente" href="{% url 'post_detail' post.id %}">댓글작성</a>
+                            <a class="nav-link text-cente" href="{% url 'post_detail' post.id %}">댓글작성</a>
                         </i>
                     </button>
                 

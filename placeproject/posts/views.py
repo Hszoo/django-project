@@ -21,6 +21,15 @@ def post_list(request):
     # 딕셔너리형태, posts라는 이름의 posts 리스트 전달, html 파일 렌더링
     return render(request, 'post_list_all.html', {'posts':posts}) 
 
+def post_my(request) :
+    posts = Post.objects.all().order_by('-create_at') 
+    paginator = Paginator(posts, 5) # 페이지당 게시글 5개씩 표시
+    pagnum = request.GET.get('page') # 현재페이지
+    posts = paginator.get_page(pagnum) #현재 페이지에 해당하는 게시글들
+
+    # 딕셔너리형태, posts라는 이름의 posts 리스트 전달, html 파일 렌더링
+    return render(request, 'post_my.html', {'posts':posts})
+
 def post_detail(request, id):
     # 존재x 페이지 에러 처리 위해 try-catch문 
     try:
@@ -42,7 +51,9 @@ def post_create(request) :
         form = PostModelForm(request.POST, request.FILES)
 
         if form.is_valid() :
-            form.save()
+            unfinished = form.save(commit=False)
+            unfinished.author = request.user
+            unfinished.save()
             return redirect('post_list') # 작성 완료 하면 posthome으로 보내기 
     
     else : # GET 요청 
@@ -53,7 +64,7 @@ def post_create(request) :
 def post_update(request, id):
     post = Post.objects.get(id=id) #요청한 id에 맞는 post객체 불러옴 
 
-    if request.user != post.writer :
+    if request.user != post.author :
         raise Http404('잘못된 접근입니다.수정 권한이 없습니다.')
     
     if request.method == 'POST' or request.method == 'FILES':
@@ -68,7 +79,7 @@ def post_update(request, id):
 def post_delete(request, id) :
     post = get_object_or_404(Post, pk=id)
 
-    if request.user != post.writer :
+    if request.user != post.author :
         raise Http404('잘못된 접근입니다. 게시글은 작성자만 삭제할 수 있습니다.') # 로그인한 사용자와 작성자가 다르면 에러 
     
     if request.method == 'GET' :
@@ -86,6 +97,7 @@ def create_comment(request, id) :
         finished_form = filled_form.save(commit=False)
         # 넘겨받은 id에 맞는 post를 참조하도록 
         finished_form.article = get_object_or_404(Post, pk=id)
+        finished_form.author = request.user
         finished_form.save()
     return redirect('post_detail', id)
 

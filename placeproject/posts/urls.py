@@ -5,7 +5,7 @@ from posts import views
 urlpatterns = [
     path('', views.home, name='posthome'),
     path('post_list/',views.post_list, name='post_list'),
-    
+    path('post_my', views.post_my, name='post_my'),
     # 게시글 경로 
     path('create/', views.post_create, name='post_create'),
     path('updadte/<int:id>/', views.post_update, name='post_update'),

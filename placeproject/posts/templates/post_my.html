@@ -7,7 +7,9 @@
     <!-- for문으로 출력 -->
     <div> <!-- card 리스트 안에 카드 여러개 만들었는데-->
         {% for post in posts %}  
-            {% include 'post_card.html' %} <!-- include해서 파일 가져다가 쓸 수도 있음 (경로참고)-->
+            {% if request.user == post.author %}
+                {% include 'post_card.html' %} <!-- include해서 파일 가져다가 쓸 수도 있음 (경로참고)-->
+            {% endif %} 
         {% endfor %}
         <hr>
     </div>

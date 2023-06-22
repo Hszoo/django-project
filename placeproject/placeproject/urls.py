@@ -10,6 +10,8 @@ urlpatterns = [
     path('', home.views.home, name='home'), #시작앱 : home
     path('comment/', include('comment.urls')),
     path('posts/', include('posts.urls')), 
+    path('accounts/', include('accounts.urls', namespace='accounts')),
+
 ]
 
 

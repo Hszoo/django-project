@@ -1,46 +1,99 @@
 {% extends 'base.html' %}
 
 {% block title %}post 상세 화면{% endblock %}
+
 {% include 'posts/post_card.html' with detail=True %}
+
 {% block content %}
-<h1></h1>
-    <!-- 이 html 파일 렌더링 하면서 넘겨받은 
-        객체 id에 대해 detail 페이지 보여줌 -->
-    <h5>제목: {{post.title}} </h4>
-    <h5>작성일: {{post.create_at|date:"Y년 m월 d일"}} </h5>
-    <hr>
-    
-    <h4>게시글 사진</h4>
-    {% if post.photo %}    
-        <img src="{{ post.photo.url }}" alt="" height="300"/>
-    {% else %}
-        <img src="http://via.placeholder.com/600x600" alt=""/>
-    {% endif %}
+<!-- Page Content-->
+<section class="py-5">
+    <div class="container px-5 my-5">
+        <div class="row gx-5">
+            <div class="col-lg-3">
+                <div class="d-flex align-items-center mt-lg-5 mb-4">
+                    <img class="img-fluid rounded-circle" src="https://dummyimage.com/50x50/ced4da/6c757d.jpg" alt="..." />
+                    <div class="ms-3">
+                        <div class="fw-bold">{{post.author}}</div>
+                    </div>
+                </div>
+            </div>
+            <div class="col-lg-9">
+                <!-- Post content-->
+                <article>
+                    <!-- Post header-->
+                    <header class="mb-4">
+                        <!-- Post title-->
+                        <h1 class="fw-bolder mb-1">{{post.title}}</h1>
+                        <!-- Post meta content-->
+                        <div class="text-muted fst-italic mb-2">작성일: {{post.create_at|date:"Y년 m월 d일"}}</div>
+                        <div>    
+                            {% if request.user == post.author %}
+                            <a href="{% url 'post_update' post.id %}">수정</a> 
+                            <a href="{% url 'post_delete' post.id %}">삭제</a> 
+                            <hr>
+                            {% endif %}</div>
+                        <!-- Post categories-->
+                    </header>
+                    <!-- Preview image figure-->
+                    <figure class="mb-4">
+                        {% if post.photo %}    
+                        <img src="{{ post.photo.url }}" alt="" height="300"/>
+                        {% else %}
+                        <img src="https://dummyimage.com/900x400/ced4da/6c757d.jpg" alt=""/>
+                        {% endif %}
+                    </figure>
+                    <!-- Post content-->
+                    <section class="mb-5">
+                        <p class="fs-5 mb-4"> {{ post.content }} </p>
+                    </section>
+                </article>
 
-    <!-- 내용 -->
-    <p> {{ post.content }} </p>
-    <a href="{% url 'post_update' post.id %}">수정</a> 
-    <a href="{% url 'post_delete' post.id %}">삭제</a> 
-    <hr>
 
+                <!-- Comments section-->
+                <section>
+                    <div class="card bg-light">
+                        <div class="card-body">
+                            <!-- Comment form-->
+                            {% if user.is_authenticated %}
+                            <form class="mb-4" method="POST" action="{% url 'create_comment' post.id %}">
+                                {% csrf_token %}
+                                <!-- <textarea class="form-control" rows="3" placeholder="Join the discussion and leave a comment!"></textarea>
+                                -->
+                                {{ comment_form }}
+                                <input type="submit" value="댓글등록">
+                            </form>
+                            {% else %}
+                            로그인 후 댓글 작성이 가능합니다. 
+                            {% endif %} 
 
-    <!-- 댓글 수정 -->
-    <!-- 템플릿 언어로, urls의 name 으로 이동 하도록 href 속성 값 지정 -->
-    <h4>댓글 목록</h4>
-    {% for comment in post.comment_set.all %}
-        <p>{{ comment }}</p>
-        <a href="{% url 'update_comment' post.id comment.id %}">댓글수정  </a>
-        <a href="{% url 'delete_comment' post.id comment.id %}">댓글삭제  </a>
-        <hr>    
-    {% endfor %}
-        
-    <!-- 댓글 작성 폼 -->
-    <!-- 특정 포스트 대상으로 댓글이 작성되어야 하므로  post.id 넘김 -->
-    
-    <form method="POST" action="{% url 'create_comment' post.id %}">
-        {% csrf_token %}
-        {{ comment_form }}
-        <input type="submit" value="댓글등록">
-    </form>
-    <hr>
+                            <!-- Comment with nested comments-->
+                            
+                            {% for comment in post.comment_set.all %}
+                            <div class="d-flex mb-4">
+                                <!-- 댓글 작성자 이미지 -->
+                                <div class="flex-shrink-0">
+                                    <img class="rounded-circle" src="https://dummyimage.com/50x50/ced4da/6c757d.jpg" alt="..." />
+                                </div>
+                                
+                                <div class="ms-3">
+                                    <!-- 댓글 작성자 -->
+                                    <div class="fw-bold">
+                                        {{ comment.author }}
+
+                                        {% if request.user == comment.author %}
+                                        <a href="{% url 'update_comment' post.id comment.id %}">댓글수정  </a>
+                                        <a href="{% url 'delete_comment' post.id comment.id %}">댓글삭제  </a>
+                                        {% endif %}  
+                                    </div>
+                                    <p>{{ comment }}</p>
+                                </div>                                
+                            </div>  
+                            {% endfor %}
+                            
+                    </div>
+                </section>
+            </div>
+        </div>
+    </div>
+</section>
 {% endblock %}
