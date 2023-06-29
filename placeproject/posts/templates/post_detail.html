@@ -16,6 +16,18 @@
                         <div class="fw-bold">{{post.author}}</div>
                     </div>
                 </div>
+                <button class="btn btn-outline-dark" type="submit">
+                    <table  class="text-center">
+                        <th><i>&nbsp;카테고리&nbsp;</i></th>
+                        <th><i>&nbsp;평점&nbsp;</i></th>
+                        <tr>
+                            <td>{{post.category}}</td>
+                            <td>{{post.like_count}}</td>
+                        </tr>
+                    </table>
+                </button>
+                
+                
             </div>
             <div class="col-lg-9">
                 <!-- Post content-->

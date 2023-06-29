@@ -4,12 +4,15 @@ from django.views.generic.list import ListView # cbv 에서 listView쓰기 위�
 from django.http import HttpResponse, JsonResponse, Http404
 from django.core.paginator import Paginator # 페이지 구현 
 from .forms import PostModelForm, CommentModelForm # import : 현재 파일과 동일 경로 내 forms 
-from .models import Post, Comment  # Post 테이블
+from .models import Post, Comment, User  # Post 테이블
 
 # 홈이동
 def home(request) :
     posts = Post.objects.all().order_by('-create_at') 
     return render(request, 'post_index.html', {'posts':posts})
+
+def my_page(request) :
+    return render(request, 'my_page.html')
 
 # 작성된 post들 전부 표시 
 def post_list(request):  
@@ -23,13 +26,14 @@ def post_list(request):
     return render(request, 'post_list_all.html', {'posts':posts}) 
 
 def post_my(request) :
-    posts = Post.objects.all().order_by('-create_at') 
-    paginator = Paginator(posts, 3) # 페이지당 게시글 5개씩 표시
-    pagnum = request.GET.get('page') # 현재페이지
-    posts = paginator.get_page(pagnum) #현재 페이지에 해당하는 게시글들
-
-    # 딕셔너리형태, posts라는 이름의 posts 리스트 전달, html 파일 렌더링
-    return render(request, 'post_my.html', {'posts':posts})
+    if request.user.is_authenticated:
+        posts = Post.objects.filter(author=request.user).order_by('-create_at') 
+        paginator = Paginator(posts, 3) # 페이지당 게시글 5개씩 표시
+        pagnum = request.GET.get('page') # 현재페이지
+        posts = paginator.get_page(pagnum) #현재 페이지에 해당하는 게시글들
+        return render(request, 'post_my.html', {'posts':posts})   
+    else :
+        raise Http404('로그인 후 이용 가능합니다.') 
 
 def post_detail(request, id):
     # 존재x 페이지 에러 처리 위해 try-catch문 
@@ -88,11 +92,38 @@ def post_delete(request, id) :
         return render(request, 'post_confirm_delete.html', context)
     else : # POST 요청 
         post.delete()
-    return redirect('post_list') # 삭제 처리 되면 list로 이동햇 
+    return redirect('post_list') # 삭제 처리 되면 list로 이동
+
+# 좋아요 기능
+def post_likes(request, id):
+    if request.method == 'GET' :
+        if request.user.is_authenticated:
+            post = get_object_or_404(Post, pk=id)
+            #print(post.likes.id)
+            if post.likes.filter(pk=request.user.pk).exists():
+                post.likes.remove(request.user)
+            else:
+                post.likes.add(request.user)
+            return redirect('post_list')
+    
+        else :
+            raise Http404('로그인 후 이용 가능합니다.') 
+
+# 좋아요 누른 게시글들 
+def post_like_list(request):
+    if request.user.is_authenticated:
+        posts = Post.objects.filter(likes=request.user).order_by('-create_at') 
+        paginator = Paginator(posts, 3) # 페이지당 게시글 5개씩 표시
+        pagnum = request.GET.get('page') # 현재페이지
+        posts = paginator.get_page(pagnum) #현재 페이지에 해당하는 게시글들
+        return render(request, 'post_like_list.html', {'posts':posts})   
+    else :
+        raise Http404('로그인 후 이용 가능합니다.') 
+
 
 def create_comment(request, id) :
     filled_form = CommentModelForm(request.POST)
-
+    
     if filled_form.is_valid() :
         # 임시, 댓글 객체 생성 
         finished_form = filled_form.save(commit=False)

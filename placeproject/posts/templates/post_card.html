@@ -1,3 +1,4 @@
+{% load static %}
 <section class="py-5">
     <div class="container px-4 px-lg-5 my-5">
         <div class="row gx-4 gx-lg-5 align-items-center">
@@ -21,7 +22,7 @@
                 <div class="small mb-1">작성자 {{post.author}}</div>
                 
                 <!-- 제목 표시 -->
-                <h1 class="display-5 fw-bolder"><a class="nav-link" href="{% url 'post_detail' post.id %}">{{post.title}}</a></h1>
+                <h1 class="display-5 fw-bolder"><a class="nav-link" href="{% url 'post_detail' post.id %}">{{post.title|truncatechars:20}}</a></h1>
                 <p class="lead">
                     {% if not detail %}
                         {{ post.content|truncatechars:35 }}
@@ -37,11 +38,16 @@
                     </input>
 --> 
                     <!-- 따봉버튼 -->
-                    <button class="btn btn-outline-dark flex-shrink-0 me-3" type="button">
-                        <i class="">
-                            추천수
-                        </i>
-                    </button>
+                    <form action="{% url 'post_likes' post.id %}" method='GET'>
+                        {% csrf_token %}
+                        {% if user in post.likes.all %}
+                        <input class="btn flex-shrink-0 me-3" type="image" src="{% static 'assets/img/click_heart.png' %}"/>
+                    
+                        {% else %}
+                        <input class="btn flex-shrink-0 me-3" type="image" src="{% static 'assets/img/not_click_heart.png' %}"/>
+                        
+                        {% endif %}
+                    </form>
                     
                     <!-- 댓글 작성 버튼 -->
                     <button class="btn btn-outline-dark flex-shrink-0 me-3" type="button">
@@ -49,12 +55,7 @@
                             <a class="nav-link text-cente" href="{% url 'post_detail' post.id %}">댓글작성</a>
                         </i>
                     </button>
-                
-                    <!-- 저장 버튼 -->
-                    <button class="btn btn-outline-dark flex-shrink-0" type="button">
-                        <i class="bi-cart-fill me-1"></i>
-                        장소 스크랩
-                    </button>
+                    
                 </div>
             </div>
         </div>

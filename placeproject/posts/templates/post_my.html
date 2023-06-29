@@ -1,6 +1,6 @@
 {% extends 'base.html' %}
-
-{% block title %}posts list{% endblock %}
+{% load static %}
+{% block title %}my posts list{% endblock %}
 <!-- post home을 구성하는 부분 -->
 {% block content %}
     <!-- {{ posts }} 전달받은 객체를 이딴식으로 출력하면 쿼리셋형태 -->
@@ -16,17 +16,27 @@
 
     <!-- views의 post_list 에서 rendering 하면서 넘긴 posts -->
     <!-- 조건 : 현재 페이지 첫페이지가 아님 -->
-    {% if posts.has_previous %}
-    <a class="nav-link" href="?page=1">첫페이지</a>
-    <a class="nav-link" href="?page={{posts.previous_page_number}}">이전페이지</a>
-    {% endif %}
+    <div class="d-flex text-center justify-content-center">
+        {% if posts.has_previous %}
+        <a class="nav-link" href="?page=1">
+            <img src="{% static 'assets/img/free-icon-font-angle-double-left-3916751 (1).png' %}">&nbsp;&nbsp;            
+        </a>
+        <a class="nav-link" href="?page={{posts.previous_page_number}}">
+            <img src="{% static 'assets/img/free-icon-font-angle-left-3916912.png' %}">&nbsp;&nbsp;
+        </a>
+        {% endif %}
 
-    <span>{{posts.number}}</span>
-    <span> / </span>
-    <span> {{posts.paginator.num_pages}}</span>
+        <span>{{posts.number}}</span>
+        <span> &nbsp;&nbsp; / &nbsp;&nbsp; </span>
+        <span> {{posts.paginator.num_pages}}&nbsp;&nbsp;</span>
 
-    {% if posts.has_next %}
-    <a class="nav-link" href="?page={{posts.next_page_number}}" >다음 페이지</a>
-    <a class="nav-link" href="?page={{posts.paginator.num_pages}}">마지막 페이지</a>
-    {% endif %}
+        {% if posts.has_next %}
+        <a class="nav-link" href="?page={{posts.next_page_number}}" >
+            <img src="{% static 'assets/img/free-icon-font-angle-right-3916907 (1).png' %}">&nbsp;&nbsp;
+        </a>
+        <a class="nav-link" href="?page={{posts.paginator.num_pages}}">  
+            <img src="{% static 'assets/img/free-icon-font-angle-double-right-3916755.png' %}">
+        </a>
+        {% endif %}
+    </div>
 {% endblock %}
